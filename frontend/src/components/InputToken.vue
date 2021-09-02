@@ -1,14 +1,26 @@
 <script setup>
-import { ref } from 'vue'
-import { getInfo } from '../api/index'
+import { ref } from "vue";
+import { getInfo } from "../api/index";
 
 const token = ref("");
+const result = ref("")
+const successFlag = ref(0)
+let successText = '校验 Token 成功'
 
 const onSubmitToken = async () => {
-  const res = await getInfo(token.value)
-  console.log(res);
+  try {
+    const res = await getInfo(token.value);
+    result.value = successText += `，提交时间：2021-09-03 01:15:22`
+    successFlag.value = 1
+  } catch (e) {
+    let msg = e.message
+    if (msg === '用户信息验证失败') {
+      msg = msg + ', 请重新获取 Token.'
+    }
+    result.value = msg
+    successFlag.value = -1
+  }
 };
-
 </script>
 
 <template>
@@ -31,8 +43,17 @@ const onSubmitToken = async () => {
     <div class="divider divider-vertical opacity-50"></div>
     <div class="card shadow w-full">
       <div class="card-body">
-        <h2 class="card-title">运行结果</h2>
-        <p></p>
+        <h2 class="card-title">
+          运行结果
+
+          <div v-show="successFlag === 1" class="badge badge-success badge-lg">
+            成功
+          </div>
+          <div v-show="successFlag === -1" class="badge badge-error badge-lg">
+            失败
+          </div>
+        </h2>
+        <p>{{ result }}</p>
       </div>
     </div>
   </div>

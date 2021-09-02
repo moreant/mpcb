@@ -6,7 +6,8 @@ const baseAxios = axios.create({
 })
 
 baseAxios.interceptors.response.use(
-  res => {
+  response => {
+    const res = response.data
     if (res.code !== 200) {
       return Promise.reject(new Error(res.message || '错误'))
     } else {
