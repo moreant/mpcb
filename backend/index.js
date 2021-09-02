@@ -1,7 +1,13 @@
 const serve = require('koa-static');
 const route = require('koa-route');
+const cors = require('koa-cors');
 const Koa = require('koa');
 const app = new Koa();
+
+app.use(cors({
+  origin: '*',
+  credentials: true
+}));
 
 const mzStorage = require('./MZStorage')
 
@@ -16,7 +22,6 @@ const getDir = async ctx => {
   ctx.response.type = 'json'
   ctx.response.body = await mzStorage.getDir(token)
 }
-
 
 const getList = async ctx => {
   const { token, dirId } = ctx.query

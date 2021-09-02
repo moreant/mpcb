@@ -7,11 +7,16 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "axios": "^0.21.1",
+    "daisyui": "^1.14.0",
     "vue": "^3.2.6"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.6.0",
     "@vue/compiler-sfc": "^3.0.5",
+    "autoprefixer": "^10.3.3",
+    "postcss": "^8.3.6",
+    "tailwindcss": "^2.2.9",
     "vite": "^2.5.1"
   }
 }

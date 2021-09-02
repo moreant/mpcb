@@ -11,6 +11,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "koa": "^2.13.1",
+    "koa-cors": "^0.0.16",
     "koa-route": "^3.2.0",
     "koa-static": "^5.0.0",
     "qs": "^6.10.1"
