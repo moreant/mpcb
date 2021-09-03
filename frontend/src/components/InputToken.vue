@@ -1,62 +1,72 @@
 <script setup>
-import { ref } from "vue";
+import { ref, reactive } from "vue";
+import dayjs from 'dayjs'
 import { getInfo } from "../api/index";
+import BaseStep from './BaseStep.vue'
+
 
 const token = ref("");
-const result = ref("")
-const successFlag = ref(0)
-let successText = '校验 Token 成功'
+const result = reactive({
+  time: '',
+  msg: '',
+  flag: 0
+})
 
 const onSubmitToken = async () => {
   try {
     const res = await getInfo(token.value);
-    result.value = successText += `，提交时间：2021-09-03 01:15:22`
-    successFlag.value = 1
+    result.msg = '校验 Token 成功.'
+    result.flag = 1
   } catch (e) {
     let msg = e.message
     if (msg === '用户信息验证失败') {
       msg = msg + ', 请重新获取 Token.'
     }
-    result.value = msg
-    successFlag.value = -1
+
+    result.msg = msg
+    result.flag = -1
   }
+  result.time = dayjs().format('HH:mm:ss')
 };
 </script>
 
 <template>
-  <div class="flex flex-row mt-12">
-    <div class="card shadow w-full">
-      <div class="card-body">
-        <h2 class="card-title">第 1 步</h2>
-        <p>输入 Token 获取用户信息</p>
-        <div class="flex space-x-2 mt-2">
-          <input
-            v-model="token"
-            type="text"
-            placeholder="token"
-            class="w-full input input-primary input-bordered"
-          />
-          <button @click="onSubmitToken" class="btn btn-primary">提交</button>
-        </div>
+  <BaseStep step="1" title="输入 Token 获取用户信息" :flag="result.flag">
+    <template v-slot:left>
+      <div class="flex space-x-2">
+        <input
+          v-model="token"
+          type="text"
+          placeholder="token"
+          class="w-full input input-primary input-bordered"
+        />
+        <button @click="onSubmitToken" class="btn btn-primary">提交</button>
       </div>
-    </div>
-    <div class="divider divider-vertical opacity-50"></div>
-    <div class="card shadow w-full">
-      <div class="card-body">
-        <h2 class="card-title">
-          运行结果
-
-          <div v-show="successFlag === 1" class="badge badge-success badge-lg">
-            成功
-          </div>
-          <div v-show="successFlag === -1" class="badge badge-error badge-lg">
-            失败
-          </div>
-        </h2>
-        <p>{{ result }}</p>
+      <div>
+        <a href="http://topurl.cn/7Z4" target="_blank" class="btn btn-link p-0"
+          >获取 Token ?
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-45"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+            />
+          </svg>
+        </a>
       </div>
-    </div>
-  </div>
+    </template>
+    <template v-slot:right>
+      <p>{{ result.time }}</p>
+      <p>{{ result.msg }}</p>
+    </template>
+  </BaseStep>
 </template>
 
 <style></style>
