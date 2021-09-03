@@ -6,4 +6,22 @@ const getInfo = token => {
   })
 }
 
-export { getInfo }
+const getDir = token => {
+  return request.get('/dir.json', {
+    params: { token }
+  })
+}
+
+const getList = (token, dirId) => {
+  return request.get('/dir.json', {
+    params: { token }
+  })
+}
+
+const getImg = (token, url) => {
+  return request.get('/get_img.json', {
+    params: { token, url }
+  })
+}
+
+export { getInfo, getDir, getImg }

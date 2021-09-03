@@ -10,6 +10,7 @@
     "axios": "^0.21.1",
     "daisyui": "^1.14.0",
     "dayjs": "^1.10.6",
+    "qs": "^6.10.1",
     "vue": "^3.2.6"
   },
   "devDependencies": {

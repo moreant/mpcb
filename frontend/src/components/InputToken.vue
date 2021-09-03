@@ -12,9 +12,12 @@ const result = reactive({
   flag: 0
 })
 
-const onSubmitToken = async () => {
+const emit = defineEmits(['change'])
+
+const onSubmit = async () => {
   try {
     const res = await getInfo(token.value);
+    emit('change', token.value)
     result.msg = '校验 Token 成功.'
     result.flag = 1
   } catch (e) {
@@ -22,16 +25,16 @@ const onSubmitToken = async () => {
     if (msg === '用户信息验证失败') {
       msg = msg + ', 请重新获取 Token.'
     }
-
+    emit('change', '')
     result.msg = msg
     result.flag = -1
   }
   result.time = dayjs().format('HH:mm:ss')
-};
+}
 </script>
 
 <template>
-  <BaseStep step="1" title="输入 Token 获取用户信息" :flag="result.flag">
+  <base-step step="1" title="输入 Token 获取用户信息" :flag="result.flag">
     <template v-slot:left>
       <div class="flex space-x-2">
         <input
@@ -40,7 +43,7 @@ const onSubmitToken = async () => {
           placeholder="token"
           class="w-full input input-primary input-bordered"
         />
-        <button @click="onSubmitToken" class="btn btn-primary">提交</button>
+        <button @click="onSubmit" class="btn btn-primary">提交</button>
       </div>
       <div>
         <a href="http://topurl.cn/7Z4" target="_blank" class="btn btn-link p-0"
@@ -66,7 +69,7 @@ const onSubmitToken = async () => {
       <p>{{ result.time }}</p>
       <p>{{ result.msg }}</p>
     </template>
-  </BaseStep>
+  </base-step>
 </template>
 
 <style></style>
