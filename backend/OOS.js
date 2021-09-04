@@ -22,7 +22,7 @@ class OOS {
 
   getBuffer = async (url) => {
     try {
-      return await this.client.get(url);
+      return await (await this.client.get(url)).content;
     } catch (e) {
       console.log(e);
     }

@@ -41,10 +41,24 @@ const getImg = async ctx => {
   }
 }
 
+const getImgList = async ctx => {
+  const { urls, token } = ctx.query
+  const urlList = urls.split(',')
+  const { value } = await mzStorage.getOOSTOken(token)
+  const oos = new OOS(value)
+  const reqList = urlList.map(item => oos.getBuffer(item))
+  const resList = await Promise.all(reqList)
+  ctx.response.body = {
+    code: 200,
+    value: resList
+  }
+}
+
 app.use(route.get('/token.json', getToken))
 app.use(route.get('/dir.json', getDir))
 app.use(route.get('/list.json', getList))
 app.use(route.get('/get_img.json', getImg))
+app.use(route.get('/get_img_list.json', getImgList))
 
 app.use(serve(__dirname + '/dist'));
 

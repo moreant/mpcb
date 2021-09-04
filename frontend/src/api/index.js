@@ -24,4 +24,10 @@ const getImg = (token, url) => {
   })
 }
 
-export { getInfo, getDir, getImg, getList }
+const getIconList = (token, urls) => {
+  return request.get('/get_img_list.json', {
+    params: { token, urls }
+  })
+}
+
+export { getInfo, getDir, getImg, getIconList, getList }
