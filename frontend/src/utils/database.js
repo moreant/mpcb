@@ -1,6 +1,4 @@
 import Dexie from 'dexie';
-
-
 export default class Database extends Dexie {
 
   constructor() {
@@ -19,11 +17,15 @@ export default class Database extends Dexie {
     return this.imgs.bulkAdd(items)
   }
 
-  getImgsDownNum (dirId) {
-    return this.imgs.where({ dirId, download: '1' }).count()
+  updateDownload (key) {
+    return this.imgs.update(key, { download: '1' })
   }
 
-  getImgs (dirId) {
-    return this.imgs.where({ dirId }).toArray()
+  getImgsDownNum (dirId, flag) {
+    return this.imgs.where({ dirId, download: flag }).count()
+  }
+
+  getImgs (query) {
+    return this.imgs.where(query).toArray()
   }
 }

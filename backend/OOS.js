@@ -1,14 +1,16 @@
 let OSS = require('ali-oss');
 class OOS {
 
-  constructor({ region = '', accessKeyId = '', bucket = '', accessKeySecret = '', securityToken = '' }) {
-    this.client = new OSS({
-      region,
-      accessKeyId,
-      accessKeySecret,
-      bucket,
-      stsToken: securityToken
-    });
+  constructor(token) {
+    if (token) {
+      this.client = new OSS({
+        region: token.region,
+        accessKeyId: token.accessKeyId,
+        accessKeySecret: token.accessKeySecret,
+        bucket: token.bucket,
+        stsToken: token.securityToken
+      });
+    }
   }
 
   downImg = async (url, saveUrl) => {

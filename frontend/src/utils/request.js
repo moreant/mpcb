@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const baseAxios = axios.create({
   baseURL: 'http://localhost:3005',
-  timeout: 5 * 1000
+  timeout: 10 * 1000
 })
 
 baseAxios.interceptors.response.use(
