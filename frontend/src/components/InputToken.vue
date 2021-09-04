@@ -1,11 +1,13 @@
 <script setup>
 import { ref, reactive } from "vue";
+import Cookies from 'js-cookie'
 import dayjs from 'dayjs'
 import { getInfo } from "../api/index";
 import BaseStep from './BaseStep.vue'
 
 
-const token = ref("");
+const token = ref(Cookies.get('token'));
+
 const result = reactive({
   time: '',
   msg: '',
@@ -16,9 +18,10 @@ const emit = defineEmits(['change'])
 
 const onSubmit = async () => {
   try {
-    const res = await getInfo(token.value);
+    await getInfo(token.value);
     emit('change', token.value)
     result.msg = '校验 Token 成功.'
+    Cookies.set('token', token.value)
     result.flag = 1
   } catch (e) {
     let msg = e.message
@@ -30,6 +33,10 @@ const onSubmit = async () => {
     result.flag = -1
   }
   result.time = dayjs().format('HH:mm:ss')
+}
+
+if (token.value) {
+  onSubmit()
 }
 </script>
 

@@ -18,7 +18,7 @@ const props = defineProps({
         <slot name="left"></slot>
       </div>
     </div>
-    <div class="divider divider-vertical opacity-20"></div>
+    <div class="divider divider-vertical opacity-10"></div>
     <div class="card shadow w-full">
       <div class="card-body">
         <h2 class="card-title">

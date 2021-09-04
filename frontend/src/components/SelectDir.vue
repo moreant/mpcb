@@ -1,12 +1,7 @@
 <script setup>
 import { ref, reactive, watchEffect } from "vue";
-import qs from 'qs'
-import daysj from 'dayjs'
 import { getDir, getImg } from "../api/index";
 import BaseStep from './BaseStep.vue'
-import dayjs from "dayjs";
-import AdvancedFormat from 'dayjs/plugin/advancedFormat'
-dayjs.extend(AdvancedFormat)
 
 const props = defineProps({
   token: String
@@ -19,7 +14,6 @@ watchEffect(async () => {
     const getList = dir.map(item => getIconImg(item.icon))
     imgList.value = await Promise.all(getList)
     result.value = res.value
-
   }
 })
 
@@ -73,7 +67,7 @@ const getIconImg = async url => {
                 <progress
                   class="w-24 progress progress-primary"
                   value="10"
-                  max="100"
+                  :max="dir.fileNum"
                 ></progress>
               </div>
             </div>

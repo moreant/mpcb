@@ -2,13 +2,6 @@ let OSS = require('ali-oss');
 class OOS {
 
   constructor({ region = '', accessKeyId = '', bucket = '', accessKeySecret = '', securityToken = '' }) {
-    console.log({
-      region,
-      accessKeyId,
-      accessKeySecret,
-      bucket,
-      stsToken: securityToken
-    });
     this.client = new OSS({
       region,
       accessKeyId,
