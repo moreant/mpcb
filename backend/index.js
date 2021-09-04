@@ -54,6 +54,7 @@ const getImgList = async ctx => {
   }
 }
 
+
 app.use(route.get('/token.json', getToken))
 app.use(route.get('/dir.json', getDir))
 app.use(route.get('/list.json', getList))
