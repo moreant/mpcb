@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive, watchEffect } from "vue";
-import { getDir, getImg } from "../api/index";
+import { getDir, getImg, getList } from "../api/index";
 import BaseStep from './BaseStep.vue'
 
 const props = defineProps({
@@ -24,9 +24,13 @@ const result = reactive({
   flag: 0
 })
 
-// const getList = dirId => {
-
-// }
+const getImgList = async dirId => {
+  try {
+    await getList(props.token, dirId)
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 const getIconImg = async url => {
   const res = await getImg(props.token, url)
@@ -50,7 +54,7 @@ const getIconImg = async url => {
     <template v-slot:left>
       <ul class="menu my-3 bg-base-100 rounded-box border border-gray-300">
         <li v-for="(dir, index) in result.value.dir">
-          <a @click="getList(dir.id)">
+          <a @click="getImgList(dir.id)">
             <div class="w-full flex justify-between">
               <div class="flex">
                 <div class="avatar">
@@ -60,7 +64,9 @@ const getIconImg = async url => {
                 </div>
                 <div class="flex flex-col ml-4">
                   {{ dir.dirName }}
-                  <div class="text-sm mt-1.5 text-gray-400">{{ dir.fileNum }} 张</div>
+                  <div class="text-sm mt-1.5 text-gray-400">
+                    {{ dir.fileNum }} 张
+                  </div>
                 </div>
               </div>
               <div>
