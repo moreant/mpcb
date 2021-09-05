@@ -9,6 +9,7 @@ const props = defineProps({
   token: String
 })
 
+const loading = ref(false)
 const imgList = ref([])
 const selectId = ref('')
 const dirList = ref([])
@@ -50,27 +51,40 @@ const getImgList = async dirId => {
     await database.bulkImg(dbImg)
   }
   imgList.value = dbImg
+
+  document.getElementById('downloadList').parentNode.style.maxHeight =
+    document.getElementById('selectList').parentNode.offsetHeight + 'px'
 }
 
 const onDownImg = async dirId => {
   let dbImg = await database.getImgs({ dirId, download: '0' })
+  loading.value = true
   for (let index = 0; index < dbImg.length; index++) {
     const item = dbImg[index]
-    await downImg(props.token, dirId, item.url, item.fileName)
+    // await downImg(props.token, dirId, item.url, item.fileName)
+    await new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve()
+      }, 500);
+    })
     await database.updateDownload(item.id)
     const dir = dirList.value.find(dir => dir.id === dirId)
     const img = imgList.value.find(img => img.id === item.id)
     img.download = '1'
     dir.downNum = ++dir.downNum
   }
+  loading.value = false
 }
 
 </script>
 
 <template>
-  <base-step v-if="dirList" step="2" title="选择要下载的相册">
+  <base-step v-if="dirList.length > 0" step="2" title="选择要下载的相册">
     <template v-slot:left>
-      <ul class="menu my-3 bg-base-100 rounded-box border border-gray-300">
+      <ul
+        id="selectList"
+        class="menu my-3 bg-base-100 rounded-box border border-gray-300"
+      >
         <li
           v-for="(dir, index) in dirList"
           class=""
@@ -107,13 +121,33 @@ const onDownImg = async dirId => {
         </li>
       </ul>
     </template>
-    <template v-slot:right>
+    <template v-slot:right v-if="selectId">
+      <h2 class="card-title" id="downloadList">下载列表</h2>
       <div>
-        <button class="btn btn-primary" @click="onDownImg(selectId)">
+        <button
+          class="btn btn-primary"
+          :class="{ loading: loading }"
+          @click="onDownImg(selectId)"
+        >
+          <svg
+            v-show="!loading"
+            xmlns="http://www.w3.org/2000/svg"
+            class="inline-block w-6 h-6 mr-2 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z"
+            />
+          </svg>
           下载
         </button>
       </div>
-      <div class="overflow-auto">
+      <div class="overflow-y-auto">
         <table class="table w-full">
           <thead>
             <tr>
@@ -124,12 +158,17 @@ const onDownImg = async dirId => {
           </thead>
           <tbody>
             <tr v-for="img in imgList" :key="img.id">
-              <th>{{ img.id }}</th>
-              <td v-if="img.download === '1'">
-                <div class="badge badge-success">已下载</div>
-              </td>
-              <td v-else>
-                <div class="badge badge-info">待下载</div>
+              <td>{{ img.id }}</td>
+              <td>
+                <div
+                  class="transition-all duration-500 ease-in-out badge"
+                  :class="{
+                    'badge-success': img.download === '1',
+                    'badge-info': img.download === '0'
+                  }"
+                >
+                  {{ img.download === '1' ? '已下载' : '待下载' }}
+                </div>
               </td>
               <td>{{ img.fileName }}</td>
             </tr>
@@ -140,4 +179,10 @@ const onDownImg = async dirId => {
   </base-step>
 </template>
 
-<style></style>
+<style>
+th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+</style>

@@ -72,7 +72,19 @@ if (token.value) {
         </a>
       </div>
     </template>
-    <template v-slot:right>
+    <template v-slot:right v-if="result.flag !== 0">
+      <h2 class="card-title">
+        运行结果
+        <div
+          class="badge badge-lg"
+          :class="{
+            'badge-success': result.flag === 1,
+            'badge-error': result.flag === -1
+          }"
+        >
+          {{ result.flag === 1 ? '成功' : '失败' }}
+        </div>
+      </h2>
       <p>{{ result.time }}</p>
       <p>{{ result.msg }}</p>
     </template>
