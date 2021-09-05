@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watchEffect } from 'vue'
 import { Database } from '../utils/database'
+import Mock from 'mockjs'
 
 const database = new Database()
 const errList = ref([])
@@ -13,7 +14,21 @@ watchEffect(async () => {
   if (props.changeFleg) {
     errList.value = await database.getAllErrorLog()
   }
+  if (import.meta.env.MODE === 'mock') {
+    const mock = Mock.mock({
+      "errList|3-8": [
+        {
+          key: '@natural(1, 100)',
+          dirId: '@natural(1, 100)',
+          time: '@time("M-d HH:mm:ss")',
+          msg: '错误信息 @cword("零一二三四五六七八九十", 5, 7)'
+        }
+      ]
+    })
+    errList.value = mock.errList
+  }
 })
+
 
 
 const delAll = () => {

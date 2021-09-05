@@ -1,7 +1,8 @@
 import axios from 'axios'
 
-const baseAxios = axios.create({
-  baseURL: '/api',
+let baseAxios = axios.create({
+  // baseURL: '/api',
+  baseURL: 'http://rap2api.taobao.org/app/mock/290088',
   timeout: 10 * 1000
 })
 
@@ -22,4 +23,3 @@ baseAxios.interceptors.response.use(
 )
 
 export default baseAxios
-

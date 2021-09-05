@@ -20,24 +20,47 @@ const selectId = ref('')
 const dirList = ref([])
 const database = new Database()
 
+const getDirById = dirId => {
+  return dirList.value.find(item => item.id === dirId)
+}
+
 watchEffect(async () => {
   if (props.token) {
     const res = await getDir(props.token)
     let { dir = [] } = res.value
-    dir.forEach(async item => {
-      item.downNum = await database.getImgsDownNum(item.id, IS_DOWNLOAD)
+    const dbPromis = dir.map(item => database.getImgsDownNum(item.id, IS_DOWNLOAD))
+    const resList = await Promise.all(dbPromis)
+    dir = dir.map((item, index) => {
+      return {
+        ...item,
+        downNum: resList[index]
+      }
     })
     dirList.value = dir
     const icons = dir.map(item => item.icon).join(',')
-    const bufferList = (await getIconList(props.token, icons)).value
+    getIcons(dir, icons)
+  }
+})
+
+
+const getIcons = async (dir, icons) => {
+  if (import.meta.env.MODE === 'mock') {
     dirList.value = dir.map((item, index) => {
       return {
         ...item,
-        iconSrc: bufferToBase64Img(bufferList[index].data)
+        iconSrc: item.icon
       }
     })
+    return
   }
-})
+  const bufferList = (await getIconList(props.token, icons)).value
+  dirList.value = dir.map((item, index) => {
+    return {
+      ...item,
+      iconSrc: bufferToBase64Img(bufferList[index].data)
+    }
+  })
+}
 
 
 const deleteImgLog = async () => {
@@ -45,7 +68,7 @@ const deleteImgLog = async () => {
   const dbImg = await database.getImgs({ dirId })
   await Promise.all(dbImg.map(item => database.updateDownload(item.id, NO_DOWNLOAD)))
   getImgList(dirId)
-  dirList.value.find(item => item.id === dirId).downNum = 0
+  getDirById(dirId).downNum = 0
   open.value = false
 }
 
@@ -54,6 +77,10 @@ const getImgList = async dirId => {
   let dbImg = await database.getImgs({ dirId })
   if (dbImg.length === 0) {
     const { value: { file } } = await getList(props.token, dirId)
+    if (import.meta.env.MODE === 'mock') {
+      const dir = getDirById(dirId)
+      file.length = dir.fileNum
+    }
     dbImg = file.map(item => {
       return {
         id: item.id,
@@ -85,7 +112,7 @@ const onDownImg = async dirId => {
       try {
         imgList.value.find(img => img.id === item.id).download = IS_DOWNLOAD
       } catch (e) { console.log(e); }
-      const dir = dirList.value.find(dir => dir.id === dirId)
+      const dir = getDirById(dirId)
       dir.downNum = ++dir.downNum
     } catch (e) {
       database.addErrorlog({
@@ -102,6 +129,8 @@ const onDownImg = async dirId => {
 const onDelete = value => {
   open.value = value;
 }
+
+
 
 </script>
 
