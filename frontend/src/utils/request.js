@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseURL = import.meta.env.VITE_APP_IS_MOCK === 'mock' ? 'http://rap2api.taobao.org/app/mock/290088' : '/api'
+const baseURL = import.meta.env.VITE_APP_IS_MOCK === 'mock' ? 'https://www.fastmock.site/mock/6fcb874a89760d55eebabfa894e1312e/mpcb' : '/api'
 
 let baseAxios = axios.create({
   baseURL: baseURL,
