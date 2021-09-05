@@ -1,5 +1,4 @@
 const fs = require('fs');
-const serve = require('koa-static');
 const route = require('koa-route');
 const cors = require('koa-cors');
 const Koa = require('koa');
@@ -8,11 +7,6 @@ const mzStorage = require('./MZStorage')
 
 const app = new Koa();
 let oos = new OOS()
-
-app.use(cors({
-  origin: '*',
-  credentials: true
-}));
 
 fs.promises.mkdir(`down`).catch(e => { })
 
@@ -84,8 +78,6 @@ app.use(route.get('/list.json', getList))
 app.use(route.get('/get_img.json', getImg))
 app.use(route.get('/get_img_list.json', getImgList))
 app.use(route.get('/down_img.json', downImg))
-
-app.use(serve(__dirname + '/dist'));
 
 app.listen(3005);
 
