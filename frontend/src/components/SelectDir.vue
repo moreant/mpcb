@@ -63,6 +63,9 @@ const getImgList = async dirId => {
     })
     await database.bulkImg(dbImg)
   }
+  if (dbImg.length > 500) {
+    dbImg.length = 500
+  }
   imgList.value = dbImg
 
   document.getElementById('downloadList').parentNode.style.maxHeight =
@@ -93,7 +96,7 @@ const onDelete = value => {
 
 <template>
   <Dialog :open="open" @close="open = false" @ok="deleteImgLog" />
-  <base-step v-if="dirList.length > 0" step="2" title="选择要下载的相册">
+  <base-step v-if="dirList.length > 0" step="2" title="选择要下载的相册。">
     <template v-slot:left>
       <ul
         id="selectList"
@@ -137,6 +140,8 @@ const onDelete = value => {
     </template>
     <template v-slot:right v-if="selectId">
       <h2 class="card-title" id="downloadList">下载列表</h2>
+      <div>相册ID: {{ selectId }}</div>
+      <div>性能原因，下载列表至多显示500条（有空再弄虚拟列表）。</div>
       <div>
         <button
           class="btn btn-primary"
@@ -179,7 +184,7 @@ const onDelete = value => {
           删除记录
         </button>
       </div>
-      <div class="overflow-y-auto">
+      <div class="overflow-auto">
         <table class="table w-full">
           <thead>
             <tr>

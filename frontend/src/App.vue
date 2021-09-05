@@ -11,7 +11,7 @@ const token = ref('')
 
 <template>
   <div class="flex justify-center">
-    <div class="container p-4 lg:py-24">
+    <div class="container p-4 lg:py-24 lg:pt-12">
       <Home />
       <input-token
         @change="

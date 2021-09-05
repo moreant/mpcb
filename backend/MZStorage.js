@@ -34,7 +34,7 @@ const getDir = token => {
 const getList = (token, dirId) => {
   const data = {
     token,
-    limit: 1000,
+    limit: 10000,
     order: 1,
     dirId
   }

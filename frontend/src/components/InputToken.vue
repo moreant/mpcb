@@ -4,6 +4,7 @@ import Cookies from 'js-cookie'
 import dayjs from 'dayjs'
 import { getInfo } from "../api/index";
 import BaseStep from './BaseStep.vue'
+import ExtraLink from './ExtraLink.vue'
 
 
 const token = ref(Cookies.get('token'));
@@ -41,7 +42,7 @@ if (token.value) {
 </script>
 
 <template>
-  <base-step step="1" title="输入 Token 获取用户信息" :flag="result.flag">
+  <base-step step="1" title="输入 Token 获取用户信息。" :flag="result.flag">
     <template v-slot:left>
       <div class="flex space-x-2">
         <input
@@ -53,22 +54,9 @@ if (token.value) {
         <button @click="onSubmit" class="btn btn-primary">提交</button>
       </div>
       <div>
-        <a href="http://topurl.cn/7Z4" target="_blank" class="btn btn-link p-0"
+        <a href="http://topurl.cn/809" target="_blank" class="btn btn-link p-0"
           >获取 Token ?
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-45"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-            />
-          </svg>
+          <extra-link />
         </a>
       </div>
     </template>
