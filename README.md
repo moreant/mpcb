@@ -4,9 +4,9 @@ MPCB(meizu photo cloud backup)
 魅族云相册备份下载器  
 简高效的批量下载魅族云相册中的图片
 
-![](./gh_img/home.jpg)
+![](./gh_img/home.png)
 
-## 使用方法
+## 快速上手
 
 0. 首先你的电脑需要装有 `Nodejs`。
 1. 克隆或下载整个仓库，找个文件夹解压文件。
@@ -51,3 +51,11 @@ npm run dev
 
 5. Q: 为什么 `npm i` 非常慢  
    A: npm 默认的官方源服务器在国外且境内没有 CDN 加速，因此请参考这篇博客将依赖源换成淘宝源 [Npm 换源](https://moreant.github.io/p/npm-registry/)
+
+
+## 相关链接
+
+> 快速上手视频: [MPCB（魅族云相册备份器）使用指南](https://b23.tv/hyodn1)  
+> 复制 Token 脚本:  [copy-flyme-photo-token](https://openuserjs.org/scripts/moreantfoxmail.com/copy-flyme-photo-token)  
+> 魅族 API 参考:  [mzstorage](https://github.com/dingdayu/mzstorage)   
+> 复制 Token 脚本参考: [魅族云相册的照片怎么一次性全部下载？ - 知乎 ](https://www.zhihu.com/question/66221241/answer/2078686584)
