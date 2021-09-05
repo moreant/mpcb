@@ -35,10 +35,13 @@ npm run dev
 ## Q&A
 
 0. Q: Nodejs 是什么，我有装有吗？  
- A: 请在终端中执行 `node -v` 这个指令检查是否装有node. 如果没有，请按照这个教程进行安装 [安装 Node](https://www.runoob.com/nodejs/nodejs-install-setup.html)。
+   A: 请在终端中执行 `node -v` 这个指令检查是否装有 node. 如果没有，请按照这个教程进行安装 [安装 Node](https://www.runoob.com/nodejs/nodejs-install-setup.html)。
 
 1. Q: 下载的图片去哪了  
-A: 在 `backend/down/` 中，一个相册ID对应一个文件夹。
+   A: 在 `backend/down/` 中，一个相册 ID 对应一个文件夹。
 
 2. Q: 怎么下载异常了  
-A: 可能是 Token 过期了，需要重新获取，提交。
+   A: 可能是 Token 过期了，需要重新获取，提交。
+
+3. Q: 怎么下载不全  
+   A: 你的相册超过 1 万条了？
