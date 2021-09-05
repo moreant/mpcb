@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseURL = import.meta.env.MODE === 'mock' ? 'http://rap2api.taobao.org/app/mock/290088' : '/api'
+const baseURL = import.meta.env.VITE_APP_IS_MOCK === 'mock' ? 'http://rap2api.taobao.org/app/mock/290088' : '/api'
 
 let baseAxios = axios.create({
   baseURL: baseURL,

@@ -14,7 +14,7 @@ watchEffect(async () => {
   if (props.changeFleg) {
     errList.value = await database.getAllErrorLog()
   }
-  if (import.meta.env.MODE === 'mock') {
+  if (import.meta.env.VITE_APP_IS_MOCK === 'mock') {
     const mock = Mock.mock({
       "errList|3-8": [
         {

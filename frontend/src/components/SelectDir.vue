@@ -44,7 +44,7 @@ watchEffect(async () => {
 
 
 const getIcons = async (dir, icons) => {
-  if (import.meta.env.MODE === 'mock') {
+  if (import.meta.env.VITE_APP_IS_MOCK === 'mock') {
     dirList.value = dir.map((item, index) => {
       return {
         ...item,
@@ -77,7 +77,7 @@ const getImgList = async dirId => {
   let dbImg = await database.getImgs({ dirId })
   if (dbImg.length === 0) {
     const { value: { file } } = await getList(props.token, dirId)
-    if (import.meta.env.MODE === 'mock') {
+    if (import.meta.env.VITE_APP_IS_MOCK === 'mock') {
       const dir = getDirById(dirId)
       file.length = dir.fileNum
     }
