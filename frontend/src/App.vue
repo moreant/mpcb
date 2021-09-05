@@ -11,7 +11,7 @@ const changeFleg = ref(Date.now())
 </script>
 
 <template>
-  <div class="flex justify-center">
+  <div class="flex justify-center bg-gray-100">
     <div class="container p-4 lg:py-24 lg:pt-12">
       <Nav />
       <input-token

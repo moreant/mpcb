@@ -7,7 +7,7 @@ const props = defineProps({
 
 <template>
   <div class="mt-6 lg:mt-12">
-    <div class="card shadow-md w-full flex-col lg:flex-row">
+    <div class="card shadow-md w-full flex-col lg:flex-row bg-white">
       <div class="card-body w-full p-4 lg:p-8 lg:w-1/2">
         <h2 class="card-title">第 {{ step }} 步</h2>
         <p>{{ title }}</p>

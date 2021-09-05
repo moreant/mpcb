@@ -40,8 +40,8 @@ const delAll = () => {
 </script>
 
 <template>
-  <div class="mt-12">
-    <div class="card shadow w-full flex-row">
+  <div class="mt-6 lg:mt-12">
+    <div class="card shadow w-full flex-row bg-white">
       <div class="card-body w-1/2">
         <h2 class="card-title">
           错误日志
