@@ -4,7 +4,7 @@ import vue from '@vitejs/plugin-vue'
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
 
-  const base = mode === 'mock' ? '/docs' : '/'
+  const base = mode === 'mock' ? '/mpcb' : '/'
   return {
     base,
     plugins: [vue()],
