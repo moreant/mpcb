@@ -1,11 +1,11 @@
 import Dexie from 'dexie';
-export default class Database extends Dexie {
+export class Database extends Dexie {
 
   constructor() {
     super('database');
 
     this.version(1).stores({
-      imgs: 'id,[dirId+download],fileName,[dirId+url]',
+      imgs: 'id,dirId,[dirId+download],fileName,[dirId+url]',
     });
 
     this.imgs = this.table('imgs')
@@ -17,8 +17,8 @@ export default class Database extends Dexie {
     return this.imgs.bulkAdd(items)
   }
 
-  updateDownload (key) {
-    return this.imgs.update(key, { download: '1' })
+  updateDownload (key, download) {
+    return this.imgs.update(key, { download })
   }
 
   getImgsDownNum (dirId, flag) {
@@ -29,3 +29,6 @@ export default class Database extends Dexie {
     return this.imgs.where(query).toArray()
   }
 }
+
+export const IS_DOWNLOAD = '1'
+export const NO_DOWNLOAD = '0'

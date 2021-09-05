@@ -1,15 +1,18 @@
 <script setup>
 import { ref, reactive, watchEffect } from "vue";
 import { getDir, getIconList, getList, downImg } from "../api/index";
-import Database from '../utils/database'
+import { Database, IS_DOWNLOAD, NO_DOWNLOAD } from '../utils/database'
 import { bufferToBase64Img } from '../utils/helper'
+
 import BaseStep from './BaseStep.vue'
+import Dialog from './Dialog.vue'
 
 const props = defineProps({
   token: String
 })
 
 const loading = ref(false)
+const open = ref(false)
 const imgList = ref([])
 const selectId = ref('')
 const dirList = ref([])
@@ -20,7 +23,7 @@ watchEffect(async () => {
     const res = await getDir(props.token)
     let { dir = [] } = res.value
     dir.forEach(async item => {
-      item.downNum = await database.getImgsDownNum(item.id, '1')
+      item.downNum = await database.getImgsDownNum(item.id, IS_DOWNLOAD)
     })
     dirList.value = dir
     const icons = dir.map(item => item.icon).join(',')
@@ -34,6 +37,16 @@ watchEffect(async () => {
   }
 })
 
+
+const deleteImgLog = async () => {
+  const dirId = selectId.value
+  const dbImg = await database.getImgs({ dirId })
+  await Promise.all(dbImg.map(item => database.updateDownload(item.id, NO_DOWNLOAD)))
+  getImgList(dirId)
+  dirList.value.find(item => item.id === dirId).downNum = 0
+  open.value = false
+}
+
 const getImgList = async dirId => {
   selectId.value = dirId
   let dbImg = await database.getImgs({ dirId })
@@ -44,7 +57,7 @@ const getImgList = async dirId => {
         id: item.id,
         fileName: item.fileName,
         url: item.url,
-        download: '0',
+        download: NO_DOWNLOAD,
         dirId
       }
     })
@@ -57,28 +70,29 @@ const getImgList = async dirId => {
 }
 
 const onDownImg = async dirId => {
-  let dbImg = await database.getImgs({ dirId, download: '0' })
+  let dbImg = await database.getImgs({ dirId, download: NO_DOWNLOAD })
   loading.value = true
   for (let index = 0; index < dbImg.length; index++) {
     const item = dbImg[index]
-    // await downImg(props.token, dirId, item.url, item.fileName)
-    await new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve()
-      }, 500);
-    })
-    await database.updateDownload(item.id)
+    await downImg(props.token, dirId, item.url, item.fileName)
+    await database.updateDownload(item.id, IS_DOWNLOAD)
+    try {
+      imgList.value.find(img => img.id === item.id).download = IS_DOWNLOAD
+    } catch (e) { console.log(e); }
     const dir = dirList.value.find(dir => dir.id === dirId)
-    const img = imgList.value.find(img => img.id === item.id)
-    img.download = '1'
     dir.downNum = ++dir.downNum
   }
   loading.value = false
 }
 
+const onDelete = value => {
+  open.value = value;
+}
+
 </script>
 
 <template>
+  <Dialog :open="open" @close="open = false" @ok="deleteImgLog" />
   <base-step v-if="dirList.length > 0" step="2" title="选择要下载的相册">
     <template v-slot:left>
       <ul
@@ -127,6 +141,7 @@ const onDownImg = async dirId => {
         <button
           class="btn btn-primary"
           :class="{ loading: loading }"
+          :disabled="loading"
           @click="onDownImg(selectId)"
         >
           <svg
@@ -146,6 +161,23 @@ const onDownImg = async dirId => {
           </svg>
           下载
         </button>
+        <button class="btn btn-error ml-4" @click="open = true">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="inline-block w-6 h-6 mr-2 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+            />
+          </svg>
+          删除记录
+        </button>
       </div>
       <div class="overflow-y-auto">
         <table class="table w-full">
@@ -163,11 +195,11 @@ const onDownImg = async dirId => {
                 <div
                   class="transition-all duration-500 ease-in-out badge"
                   :class="{
-                    'badge-success': img.download === '1',
-                    'badge-info': img.download === '0'
+                    'badge-success': img.download === IS_DOWNLOAD,
+                    'badge-info': img.download === NO_DOWNLOAD
                   }"
                 >
-                  {{ img.download === '1' ? '已下载' : '待下载' }}
+                  {{ img.download === IS_DOWNLOAD ? '已下载' : '待下载' }}
                 </div>
               </td>
               <td>{{ img.fileName }}</td>

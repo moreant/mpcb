@@ -4,6 +4,7 @@ import Home from './components/Home.vue'
 import InputToken from './components/InputToken.vue'
 import SelectDir from './components/SelectDir.vue'
 
+
 const token = ref('')
 
 </script>
