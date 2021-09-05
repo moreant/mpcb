@@ -5,8 +5,7 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "mock": "vite --mode mock",
-    "mockBuild":"vite build --mode mock"
+    "mock": "vite --mode mock"
   },
   "dependencies": {
     "@headlessui/vue": "^1.4.1",

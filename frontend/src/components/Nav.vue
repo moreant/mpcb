@@ -19,7 +19,7 @@ import { isMock } from '../utils/helper'
       text-white
     "
   >
-    <div class="text-2xl lg:text-6xl pb-4 font-bold">Hi, 欢迎使用 MPCB！</div>
+    <div class="text-2xl lg:text-6xl pb-1 lg:pb-4 font-bold">Hi, 欢迎使用 MPCB！</div>
     <div class="flex flex-col lg:flex-row w-full justify-between">
       <div class="text-base lg:text-3xl">简洁高效的批量下载魅族云相册中的图片。</div>
       <a
