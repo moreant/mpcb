@@ -152,26 +152,33 @@ const onDelete = value => {
           }"
         >
           <a @click="getImgList(dir.id)">
-            <div class="w-full flex justify-between">
+            <div class="w-full">
               <div class="flex">
                 <div class="avatar">
-                  <div class="rounded-btn w-20 h-20">
+                  <div class="flex-none rounded-btn w-20 h-20">
                     <img v-show="dir.iconSrc" :src="dir.iconSrc" />
                   </div>
                 </div>
-                <div class="flex flex-col ml-4">
+                <div class="flex flex-grow flex-col ml-4">
                   {{ dir.dirName }}
                   <div class="text-sm mt-1.5 text-gray-400">
                     {{ dir.fileNum }} 张
                   </div>
+                  <div class="lg:hidden">
+                    <progress
+                      class="flex-none w-24 progress progress-primary"
+                      :value="dir.downNum"
+                      :max="dir.fileNum"
+                    ></progress>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <progress
-                  class="w-24 progress progress-primary"
-                  :value="dir.downNum"
-                  :max="dir.fileNum"
-                ></progress>
+                <div class="hidden lg:block">
+                  <progress
+                    class="flex-none w-24 progress progress-primary"
+                    :value="dir.downNum"
+                    :max="dir.fileNum"
+                  ></progress>
+                </div>
               </div>
             </div>
           </a>

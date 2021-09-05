@@ -9,27 +9,28 @@ import { isMock } from '../utils/helper'
     class="
       flex flex-col
       justify-end
-      h-72
+      h-52
+      lg:h-72
       bg-primary
-      p-12
+      p-6
+      lg:p-12
       rounded-box
-      shadow
+      shadow-md
       text-white
     "
   >
-    <div class="text-6xl pb-4 font-bold">Hi, 欢迎使用 MPCB！</div>
-    <div class="flex flex-row w-full justify-between">
-      <div class="text-3xl">简洁高效的批量下载魅族云相册中的图片。</div>
-
+    <div class="text-2xl lg:text-6xl pb-4 font-bold">Hi, 欢迎使用 MPCB！</div>
+    <div class="flex flex-col lg:flex-row w-full justify-between">
+      <div class="text-base lg:text-3xl">简洁高效的批量下载魅族云相册中的图片。</div>
       <a
         href="https://github.com/moreant/mpcb"
         target="_blank"
-        class="btn-link text-3xl text-white"
-        >使用文档 <extra-link class="h-6 inline"
+        class="btn-link text-base lg:text-3xl text-white"
+        >使用文档 <extra-link class="w-4 lg:w-5 h-6 inline"
       /></a>
     </div>
   </div>
-  <div v-if="isMock" class="mt-12 alert alert-warning">
+  <div v-if="isMock" class="mt-6 lg:mt-12 alert alert-warning text-sm lg:text-base shadow-md">
     <div class="flex-1">
       <svg
         xmlns="http://www.w3.org/2000/svg"

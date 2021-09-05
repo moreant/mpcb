@@ -3,6 +3,7 @@ import { ref, reactive } from "vue";
 import Cookies from 'js-cookie'
 import dayjs from 'dayjs'
 import { getInfo } from "../api/index";
+import { isMock } from '../utils/helper'
 import BaseStep from './BaseStep.vue'
 import ExtraLink from './ExtraLink.vue'
 
@@ -33,6 +34,11 @@ const onSubmit = async () => {
     result.flag = -1
   }
   result.time = dayjs().format('HH:mm:ss')
+}
+
+if(isMock){
+  token.value = "在线体验随意输入"
+  onSubmit()
 }
 
 if (token.value) {
