@@ -14,20 +14,11 @@ class OOS {
   }
 
   downImg = async (url, saveUrl) => {
-    try {
-      await this.client.get(url, saveUrl);
-    }
-    catch (e) {
-      console.log(e);
-    }
+    await this.client.get(url, saveUrl);
   }
 
   getBuffer = async (url) => {
-    try {
-      return await (await this.client.get(url)).content;
-    } catch (e) {
-      console.log(e);
-    }
+    return await (await this.client.get(url)).content;
   }
 
 }

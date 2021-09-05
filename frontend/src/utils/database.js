@@ -6,10 +6,11 @@ export class Database extends Dexie {
 
     this.version(1).stores({
       imgs: 'id,dirId,[dirId+download],fileName,[dirId+url]',
+      errorLog: 'key++,dirId,time,msg'
     });
 
     this.imgs = this.table('imgs')
-
+    this.errorLog = this.table('errorLog')
 
   }
 
@@ -27,6 +28,18 @@ export class Database extends Dexie {
 
   getImgs (query) {
     return this.imgs.where(query).toArray()
+  }
+
+  addErrorlog (item) {
+    return this.errorLog.add(item)
+  }
+
+  getAllErrorLog () {
+    return this.errorLog.reverse().sortBy('keys')
+  }
+
+  deleteAllErrorLog () {
+    return this.errorLog.clear()
   }
 }
 

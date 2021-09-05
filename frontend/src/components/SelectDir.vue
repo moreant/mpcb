@@ -1,15 +1,17 @@
 <script setup>
-import { ref, reactive, watchEffect } from "vue";
+import { ref, defineEmits, watchEffect } from "vue";
+import dayjs from 'dayjs'
 import { getDir, getIconList, getList, downImg } from "../api/index";
 import { Database, IS_DOWNLOAD, NO_DOWNLOAD } from '../utils/database'
 import { bufferToBase64Img } from '../utils/helper'
-
 import BaseStep from './BaseStep.vue'
 import Dialog from './Dialog.vue'
 
 const props = defineProps({
   token: String
 })
+
+const emit = defineEmits(['error'])
 
 const loading = ref(false)
 const open = ref(false)
@@ -77,13 +79,22 @@ const onDownImg = async dirId => {
   loading.value = true
   for (let index = 0; index < dbImg.length; index++) {
     const item = dbImg[index]
-    await downImg(props.token, dirId, item.url, item.fileName)
-    await database.updateDownload(item.id, IS_DOWNLOAD)
     try {
-      imgList.value.find(img => img.id === item.id).download = IS_DOWNLOAD
-    } catch (e) { console.log(e); }
-    const dir = dirList.value.find(dir => dir.id === dirId)
-    dir.downNum = ++dir.downNum
+      await downImg(props.token, dirId, item.url, item.fileName)
+      await database.updateDownload(item.id, IS_DOWNLOAD)
+      try {
+        imgList.value.find(img => img.id === item.id).download = IS_DOWNLOAD
+      } catch (e) { console.log(e); }
+      const dir = dirList.value.find(dir => dir.id === dirId)
+      dir.downNum = ++dir.downNum
+    } catch (e) {
+      database.addErrorlog({
+        dirId,
+        time: dayjs().format('M-D HH:mm:ss'),
+        msg: e.message
+      })
+      emit('error')
+    }
   }
   loading.value = false
 }

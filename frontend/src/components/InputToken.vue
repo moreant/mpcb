@@ -8,7 +8,6 @@ import ExtraLink from './ExtraLink.vue'
 
 
 const token = ref(Cookies.get('token'));
-
 const result = reactive({
   time: '',
   msg: '',

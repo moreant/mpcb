@@ -8,7 +8,9 @@ const mzStorage = require('./MZStorage')
 const app = new Koa();
 let oos = new OOS()
 
-fs.promises.mkdir(`down`).catch(e => { })
+const imgDir = '../down'
+
+fs.promises.mkdir(imgDir).catch(e => { })
 
 
 const getToken = async ctx => {
@@ -56,9 +58,9 @@ const getImgList = async ctx => {
 
 const downImg = async ctx => {
   const { dir, fileName, url } = ctx.query
-  await fs.promises.mkdir(`./down/${dir}`).catch(e => { })
+  await fs.promises.mkdir(`${imgDir}/${dir}`).catch(e => { })
   try {
-    await oos.downImg(url, `./down/${dir}/${fileName}`)
+    await oos.downImg(url, `${imgDir}/${dir}/${fileName}`)
     ctx.response.body = {
       code: 200,
       value: 'ok'
@@ -67,9 +69,10 @@ const downImg = async ctx => {
     console.log(e);
     ctx.response.body = {
       code: 500,
-      value: e
+      message: e.message
     }
   }
+
 }
 
 app.use(route.get('/token.json', getToken))

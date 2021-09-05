@@ -3,9 +3,10 @@ import { ref } from 'vue'
 import Home from './components/Home.vue'
 import InputToken from './components/InputToken.vue'
 import SelectDir from './components/SelectDir.vue'
-
+import ErrorLog from './components/ErrorLog.vue'
 
 const token = ref('')
+const changeFleg = ref(Date.now())
 
 </script>
 
@@ -20,7 +21,8 @@ const token = ref('')
           }
         "
       />
-      <select-dir :token="token" />
+      <select-dir :token="token" @error="changeFleg = Date.now()" />
+      <error-log :changeFleg="changeFleg" />
     </div>
   </div>
 </template>
