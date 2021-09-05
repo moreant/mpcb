@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watchEffect } from 'vue'
 import { Database } from '../utils/database'
+import { isMock } from '../utils/helper'
 import Mock from 'mockjs'
 
 const database = new Database()
@@ -14,7 +15,7 @@ watchEffect(async () => {
   if (props.changeFleg) {
     errList.value = await database.getAllErrorLog()
   }
-  if (import.meta.env.VITE_APP_IS_MOCK === 'mock') {
+  if (isMock) {
     const mock = Mock.mock({
       "errList|3-8": [
         {

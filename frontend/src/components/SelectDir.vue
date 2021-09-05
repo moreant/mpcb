@@ -3,7 +3,7 @@ import { ref, defineEmits, watchEffect } from "vue";
 import dayjs from 'dayjs'
 import { getDir, getIconList, getList, downImg } from "../api/index";
 import { Database, IS_DOWNLOAD, NO_DOWNLOAD } from '../utils/database'
-import { bufferToBase64Img } from '../utils/helper'
+import { bufferToBase64Img, isMock } from '../utils/helper'
 import BaseStep from './BaseStep.vue'
 import Dialog from './Dialog.vue'
 
@@ -44,7 +44,7 @@ watchEffect(async () => {
 
 
 const getIcons = async (dir, icons) => {
-  if (import.meta.env.VITE_APP_IS_MOCK === 'mock') {
+  if (isMock) {
     dirList.value = dir.map((item, index) => {
       return {
         ...item,
@@ -77,7 +77,7 @@ const getImgList = async dirId => {
   let dbImg = await database.getImgs({ dirId })
   if (dbImg.length === 0) {
     const { value: { file } } = await getList(props.token, dirId)
-    if (import.meta.env.VITE_APP_IS_MOCK === 'mock') {
+    if (isMock) {
       const dir = getDirById(dirId)
       file.length = dir.fileNum
     }

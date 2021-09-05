@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import Home from './components/Home.vue'
+import Nav from './components/Nav.vue'
 import InputToken from './components/InputToken.vue'
 import SelectDir from './components/SelectDir.vue'
 import ErrorLog from './components/ErrorLog.vue'
@@ -13,7 +13,7 @@ const changeFleg = ref(Date.now())
 <template>
   <div class="flex justify-center">
     <div class="container p-4 lg:py-24 lg:pt-12">
-      <Home />
+      <Nav />
       <input-token
         @change="
           (e) => {

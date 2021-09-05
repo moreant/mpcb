@@ -7,5 +7,8 @@ const bufferToBase64Img = buffer => {
   return 'data:image/jpeg;base64,' + window.btoa(binary)
 }
 
+const isMock = import.meta.env.VITE_APP_IS_MOCK === 'mock'
 
-export { bufferToBase64Img }
+
+
+export { bufferToBase64Img, isMock }
