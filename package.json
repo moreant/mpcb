@@ -1,0 +1,57 @@
+{
+  "name": "mpcb",
+  "version": "0.1.0",
+  "main": "dist/electron/main/index.js",
+  "description": "mpcb",
+  "author": "moreant <moreant@foxmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build && electron-builder"
+  },
+  "engines": {
+    "node": ">=14.17.0"
+  },
+  "devDependencies": {
+    "@types/ali-oss": "^6.16.4",
+    "@types/qs": "^6.9.7",
+    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/parser": "^5.31.0",
+    "@vitejs/plugin-vue": "^3.0.1",
+    "autoprefixer": "^10.4.8",
+    "electron": "^19.0.10",
+    "electron-builder": "^23.1.0",
+    "eslint": "^8.20.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-vue": "^9.3.0",
+    "typescript": "^4.7.4",
+    "vite": "^3.0.4",
+    "vite-plugin-electron": "^0.8.3",
+    "vue": "^3.2.37",
+    "vue-tsc": "^0.38.9"
+  },
+  "env": {
+    "VITE_DEV_SERVER_HOST": "127.0.0.1",
+    "VITE_DEV_SERVER_PORT": 3344
+  },
+  "keywords": [
+    "electron",
+    "rollup",
+    "vite",
+    "vue3",
+    "vue"
+  ],
+  "dependencies": {
+    "ali-oss": "^6.17.1",
+    "naive-ui": "^2.32.1",
+    "pinia": "^2.0.17",
+    "postcss": "^8.4.14",
+    "prettier": "^2.7.1",
+    "qs": "^6.11.0",
+    "tailwindcss": "^3.1.7",
+    "unplugin-auto-import": "^0.10.3",
+    "unplugin-vue-components": "^0.21.2"
+  }
+}
