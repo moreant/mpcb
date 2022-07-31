@@ -25,7 +25,7 @@ export const getOSSInfo = (token: string) => {
   return request.post<any, Basic<Sig>>(api.sig, qs.stringify(params))
 }
 
-export const getDir = () => {
+export const getDirList = () => {
   const params = {
     limit: 1000,
     order: 1,
@@ -34,13 +34,13 @@ export const getDir = () => {
   return request.post<void, Basic<DirList>>(api.dirList, qs.stringify(params))
 }
 
-export const getList = (token: string, dirId: number, fileNum = 10000) => {
+export const getAlbumList = (dirId: number, fileNum = 10000) => {
   const params = {
     order: 1,
     offset: 0,
     limit: fileNum,
     dirId,
-    token
+    token: getToken()
   }
   return request.post<void, Basic<AlbumList>>(api.albumList, qs.stringify(params))
 }

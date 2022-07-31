@@ -8,16 +8,22 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AlbumList: typeof import('./src/components/AlbumList.vue')['default']
-    AppIndex: typeof import('./src/components/App/AppIndex.vue')['default']
-    HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    AppGlobal: typeof import('./src/components/Application/AppGlobal.vue')['default']
+    AppGlobalAction: typeof import('./src/components/Application/AppGlobalAction.vue')['default']
+    ImgList: typeof import('./src/components/ImgList.vue')['default']
     NButton: typeof import('naive-ui')['NButton']
     NCard: typeof import('naive-ui')['NCard']
     NConfigProvider: typeof import('naive-ui')['NConfigProvider']
+    NDialogProvider: typeof import('naive-ui')['NDialogProvider']
     NInput: typeof import('naive-ui')['NInput']
     NInputGroup: typeof import('naive-ui')['NInputGroup']
+    NLoadingBarProvider: typeof import('naive-ui')['NLoadingBarProvider']
     NMenu: typeof import('naive-ui')['NMenu']
     NMessageProvider: typeof import('naive-ui')['NMessageProvider']
+    NNotificationProvider: typeof import('naive-ui')['NNotificationProvider']
+    NNumberAnimation: typeof import('naive-ui')['NNumberAnimation']
     NSpace: typeof import('naive-ui')['NSpace']
+    NStatistic: typeof import('naive-ui')['NStatistic']
     TokenInput: typeof import('./src/components/TokenInput.vue')['default']
   }
 }

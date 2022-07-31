@@ -1,6 +1,7 @@
 import { app, BrowserWindow, shell, ipcMain } from 'electron'
 import { release } from 'os'
 import { join } from 'path'
+import { registerDownloadService } from './action'
 
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith('6.1')) app.disableHardwareAcceleration()
@@ -16,13 +17,13 @@ if (!app.requestSingleInstanceLock()) {
 // Remove electron security warnings
 // This warning only shows in development mode
 // Read more on https://www.electronjs.org/docs/latest/tutorial/security
-// process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 
 export const ROOT_PATH = {
   // /dist
   dist: join(__dirname, '../..'),
   // /dist or /public
-  public: join(__dirname, app.isPackaged ? '../..' : '../../../public'),
+  public: join(__dirname, app.isPackaged ? '../..' : '../../../public')
 }
 
 let win: BrowserWindow | null = null
@@ -42,10 +43,12 @@ async function createWindow() {
       // Consider using contextBridge.exposeInMainWorld
       // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation
       nodeIntegration: true,
-      contextIsolation: false,
+      contextIsolation: true,
       webSecurity: false
-    },
+    }
   })
+
+  registerDownloadService()
 
   if (app.isPackaged) {
     win.loadFile(indexHtml)
@@ -95,8 +98,8 @@ app.on('activate', () => {
 ipcMain.handle('open-win', (event, arg) => {
   const childWindow = new BrowserWindow({
     webPreferences: {
-      preload,
-    },
+      preload
+    }
   })
 
   if (app.isPackaged) {

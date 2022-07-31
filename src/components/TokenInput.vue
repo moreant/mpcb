@@ -5,7 +5,7 @@
   import { ref } from 'vue'
 
   const emit = defineEmits(['update:token'])
-  // (() => { return document.cookie.split('; _utoken=')[1] })()
+  //  (() => { return document.cookie.split('; _utoken=').pop().split(';').shift() })() 
 
   const appStore = useAppStore()
   const uToken = ref('')

@@ -1,5 +1,7 @@
+import './beidge'
+
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     if (condition.includes(document.readyState)) {
       resolve(true)
     } else {
@@ -14,15 +16,15 @@ function domReady(condition: DocumentReadyState[] = ['complete', 'interactive'])
 
 const safeDOM = {
   append(parent: HTMLElement, child: HTMLElement) {
-    if (!Array.from(parent.children).find(e => e === child)) {
+    if (!Array.from(parent.children).find((e) => e === child)) {
       return parent.appendChild(child)
     }
   },
   remove(parent: HTMLElement, child: HTMLElement) {
-    if (Array.from(parent.children).find(e => e === child)) {
+    if (Array.from(parent.children).find((e) => e === child)) {
       return parent.removeChild(child)
     }
-  },
+  }
 }
 
 /**
@@ -76,7 +78,7 @@ function useLoading() {
     removeLoading() {
       safeDOM.remove(document.head, oStyle)
       safeDOM.remove(document.body, oDiv)
-    },
+    }
   }
 }
 
@@ -85,7 +87,7 @@ function useLoading() {
 const { appendLoading, removeLoading } = useLoading()
 domReady().then(appendLoading)
 
-window.onmessage = ev => {
+window.onmessage = (ev) => {
   ev.data.payload === 'removeLoading' && removeLoading()
 }
 
