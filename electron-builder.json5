@@ -14,7 +14,8 @@
     "artifactName": "${productName}_${version}.${ext}",
     "target": [
       "dmg"
-    ]
+    ],
+    "icon": "build/icon.icns"
   },
   "win": {
     "target": [
