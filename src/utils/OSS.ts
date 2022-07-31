@@ -1,8 +1,10 @@
 import OSS from 'ali-oss'
+import dayjs from 'dayjs'
 import { Sig } from '@/types/index'
 
 class OOS {
   client: OSS | undefined
+  expiredTime: string | undefined
 
   constructor(token: Sig) {
     if (token) {
@@ -13,6 +15,7 @@ class OOS {
         bucket: token.bucket,
         stsToken: token.securityToken
       })
+      this.expiredTime = token.expiredTime
     }
   }
 
@@ -21,6 +24,8 @@ class OOS {
   getBuffer = (url: string) => this.client?.get(url)
 
   getUrl = (url: string) => this.client?.signatureUrl(url)
+
+  getExpiredTimeDayjs = () => dayjs(this.expiredTime)
 }
 
 export default OOS

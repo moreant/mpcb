@@ -53,6 +53,8 @@
   "dependencies": {
     "ali-oss": "^6.17.1",
     "axios": "^0.27.2",
+    "copy-to-clipboard": "^3.3.1",
+    "dayjs": "^1.11.4",
     "dexie": "^3.2.2",
     "pinia": "^2.0.17",
     "qs": "^6.11.0"

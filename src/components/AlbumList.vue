@@ -3,6 +3,7 @@
   import { downImgToDist } from '@/api/fs'
   import { useAppStore } from '@/store/token'
   import { Dir } from '@/types'
+  import OOS from '@/utils/OSS.js'
   import { MenuOption, NImage } from 'naive-ui'
   import { Ref } from 'vue'
 
@@ -49,19 +50,35 @@
     })
   }
 
+  // 计算过期时间
+  const showExpiredTime = computed(() => {
+    if (!appStore.ossInstance) {
+      return ''
+    }
+    const day = appStore.ossInstance.getExpiredTimeDayjs()
+    return day?.format('YYYY-MM-DD HH:mm:ss')
+  })
+
   const dirInfo = computed(() =>
     dirList.value?.find((item) => item.id === parseInt(activeKey.value))
   )
 
+  // 弹窗获取下载目录
   const getDownloadPath = async () => {
     let downloadDir = await window.ipcRenderer.invoke('GET_DOWNLOADS_PATH')
     const path = await window.ipcRenderer.invoke('OPEN_FILE_DIALOG', downloadDir)
     downloadPath.value = path[0]
   }
 
-  const dirDownPath = computed(() =>
-    downloadPath.value ? downloadPath.value + '/' + dirInfo.value?.dirName : ''
-  )
+  // 计算下载地址
+  const dirDownPath = computed(() => {
+    const path = downloadPath.value
+    if (!path) {
+      return ''
+    }
+    const split = path.indexOf(':') ? '\\' : `/`
+    return path + split + dirInfo.value?.dirName
+  })
 
   const downloadIng = ref(false)
   const downloadFinishNum = ref(0)
@@ -75,13 +92,23 @@
     const fileList = res.value.file
     downloadIng.value = true
     setDisablie(true)
-    await Promise.all(
-      fileList.map((item) =>
-        downImgToDist(dirDownPath.value, item.url, item.fileName).then(
-          () => (downloadFinishNum.value += 1)
+
+    // 分组下载避免爆内存
+    const chunkSize = 100
+    const chunkList = []
+    for (let i = 0; i < fileList.length; i += chunkSize) {
+      chunkList.push(fileList.slice(i, i + chunkSize))
+    }
+
+    for (let i = 0; i < chunkList.length; i++) {
+      await Promise.all(
+        chunkList[i].map((item) =>
+          downImgToDist(dirDownPath.value, item.url, item.fileName).then(
+            () => (downloadFinishNum.value += 1)
+          )
         )
       )
-    )
+    }
     setDisablie(false)
     downloadIng.value = false
   }
@@ -92,22 +119,34 @@
 <template>
   <div class="flex flex-row">
     <div class="w-52">
-      <n-menu v-model:value="activeKey" :options="menuOptions" :disabled="downloadIng" />
+      <n-menu
+        v-model:value="activeKey"
+        :options="menuOptions"
+        :disabled="downloadIng"
+        @update:value="downloadFinishNum = 0"
+      />
     </div>
-    <div class="">
-      <n-statistic label="选择相册" :value="dirInfo?.dirName" />
-      <n-statistic label="文件总数">
-        <n-number-animation :from="0" :to="dirInfo?.fileNum"
-      /></n-statistic>
-      <n-statistic label="下载位置" :value="dirDownPath" />
-      <n-space :vertical="true">
-        <n-button v-if="activeKey && !downloadIng" @click="getDownloadPath">选择下载位置</n-button>
-        <n-button v-if="downloadPath && !downloadIng" @click="downloadImg">开始下载</n-button>
+    <div class="w-full">
+      <n-space justify="space-between" class="mb-4">
+        <n-statistic label="OSS 过期时间" :value="showExpiredTime" />
+        <n-statistic label="选择相册" :value="dirInfo?.dirName" />
+        <n-statistic label="文件总数">
+          <n-number-animation :from="0" :to="dirInfo?.fileNum" />
+        </n-statistic>
       </n-space>
-      <n-statistic v-if="downloadIng" label="下载状态" :value="downloadFinishNum">
+      <div class="mb-4">
+        <n-statistic label="下载位置" :value="dirDownPath" />
+        <n-space>
+          <n-button v-if="activeKey && !downloadIng" @click="getDownloadPath"
+            >选择下载位置</n-button
+          >
+          <n-button v-if="downloadPath && !downloadIng" @click="downloadImg">开始下载</n-button>
+        </n-space>
+      </div>
+      <n-statistic label="下载状态" :value="downloadFinishNum">
         <template #suffix> / {{ dirInfo?.fileNum }} </template>
       </n-statistic>
-      <div v-if="dirInfo?.fileNum === downloadFinishNum">下载完成</div>
+      <!-- <div v-if="dirInfo?.fileNum === downloadFinishNum">下载完成</div> -->
     </div>
   </div>
 </template>
