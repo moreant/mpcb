@@ -4,24 +4,24 @@ on:
   watch:
     types: [started]
     paths-ignore:
-      - "**.md"
-      - "**.spec.js"
-      - ".idea"
-      - ".vscode"
-      - ".dockerignore"
-      - "Dockerfile"
-      - ".gitignore"
-      - ".github/**"
-      - "!.github/workflows/build.yml"
+      - '**.md'
+      - '**.spec.js'
+      - '.idea'
+      - '.vscode'
+      - '.dockerignore'
+      - 'Dockerfile'
+      - '.gitignore'
+      - '.github/**'
+      - '!.github/workflows/build.yml'
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    if: github.event.repository.owner.id == github.event.sender.id  # 自己点的 start
+    if: github.event.repository.owner.id == github.event.sender.id # 自己点的 start
 
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [windows-latest]
 
     steps:
       - name: Checkout Code
@@ -33,6 +33,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+
+      - name: Install Dependencies
+        run: npm install -g pnpm
 
       - name: Install Dependencies
         run: pnpm install
