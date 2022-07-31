@@ -1,8 +1,8 @@
 name: Build
 
 on:
-  push:
-    branches: [main]
+  watch:
+    types: [started]
     paths-ignore:
       - "**.md"
       - "**.spec.js"
@@ -17,6 +17,7 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+    if: github.event.repository.owner.id == github.event.sender.id  # 自己点的 start
 
     strategy:
       matrix:
