@@ -40,7 +40,7 @@ const listenerEvent = () => {
   ipcMain.handle(OPEN_FILE_DIALOG, async (event, ...args: any[]) => openFileDialog(...args))
 
   ipcMain.handle('OSS_INIT', (event, ...args: any[]) => ossInit(...args))
-  ipcMain.handle('GET_STRAME', (event, ...args: any[]) => getStream(...args))
+  ipcMain.handle('GET_STRAME', async (event, ...args: any[]) => getStream(...args))
 }
 
 let store: OSS | null = null
@@ -52,11 +52,25 @@ const getStream = async (...args: any[]) => {
   if (!store) {
     return
   }
-  console.log(url)
   const result = await store.getStream(url)
   await fs.promises.mkdir(path, { recursive: true })
-  const writeStream = fs.createWriteStream(`${path}/${fileNmae}`)
-  result.stream.pipe(writeStream)
+  return new Promise<void>((resolve, reject) => {
+    try {
+      const writeStream = fs.createWriteStream(`${path}/${fileNmae}`)
+      result.stream.pipe(writeStream)
+      writeStream.on('finish', () => {
+        console.log(fileNmae)
+        resolve()
+      })
+      writeStream.on('error', (err) => {
+        console.error('ababab', err)
+        reject(err)
+      })
+    } catch (e) {
+      reject(e)
+      console.error('?????????????????', e)
+    }
+  })
 }
 
 const ossInit = (...args: any[]) => {

@@ -9,7 +9,7 @@
 
   const activeKey = ref('')
   const downloadPath = ref('')
-  const listSize = 20
+  const listSize = 5
   const menuOptions: Ref<MenuOption[]> = ref([])
   const dirList = ref<Dir[]>()
 
@@ -80,10 +80,12 @@
   })
 
   const downloadIng = ref(false)
-  const downloadFinishNum = ref(0)
+  const downCount = ref(0)
 
+  const downloadIndex = ref(0)
   const downloadImg = async () => {
-    downloadFinishNum.value = 0
+    downCount.value = 0
+    downloadIndex.value = 0
     const res = await getAlbumList(parseInt(activeKey.value), 10000)
     if (!res.value) {
       return
@@ -100,12 +102,18 @@
     }
 
     for (let i = 0; i < chunkList.length; i++) {
+      if (i < setIndex.value) {
+        downloadIndex.value += 1
+        continue
+      }
+
       try {
+        downloadIndex.value += 1
         await Promise.all(
           chunkList[i].map((item) =>
             window.ipcRenderer
               .invoke('GET_STRAME', item.url, dirDownPath.value, item.fileName)
-              .then(() => (downloadFinishNum.value += 1))
+              .then(() => (downCount.value += 1))
           )
         )
       } catch (e) {
@@ -115,12 +123,13 @@
         } else if (e instanceof Error) {
           message = e.message
         }
-        console.error(e)
+        console.error(e, chunkList[i])
 
         window.$notification.error({
-          title: `下载出现错误`,
+          title: `下载出现错误 队列位置 ${i + 1}`,
           content: message
         })
+        throw e
       }
     }
 
@@ -129,6 +138,22 @@
   }
 
   init()
+
+  const setIndex = ref(0)
+
+  const maxList = computed(() =>
+    dirInfo.value ? Math.floor(dirInfo.value.fileNum / listSize) + 1 : 0
+  )
+
+  const downFileIndex = computed(() =>
+    dirInfo.value ? Math.min(setIndex.value * listSize + downCount.value, dirInfo.value.fileNum) : 0
+  )
+
+  const onMenuChange = () => {
+    downCount.value = 0
+    downloadIndex.value = 0
+    setIndex.value = 0
+  }
 </script>
 
 <template>
@@ -138,7 +163,7 @@
         v-model:value="activeKey"
         :options="menuOptions"
         :disabled="downloadIng"
-        @update:value="downloadFinishNum = 0"
+        @update:value="onMenuChange"
       />
     </div>
     <div class="w-full">
@@ -148,20 +173,40 @@
         <n-statistic label="文件总数">
           <n-number-animation :from="0" :to="dirInfo?.fileNum" />
         </n-statistic>
+        <n-statistic label="队列长度" :value="listSize" />
       </n-space>
       <div class="mb-4">
-        <n-statistic label="下载位置" :value="dirDownPath" />
+        <n-statistic label="下载路径" :value="dirDownPath" />
         <n-space>
           <n-button v-if="activeKey && !downloadIng" @click="getDownloadPath"
-            >选择下载位置</n-button
+            >选择下载路径</n-button
           >
-          <n-button v-if="downloadPath && !downloadIng" @click="downloadImg">开始下载</n-button>
         </n-space>
       </div>
-      <n-statistic label="下载状态" :value="downloadFinishNum">
-        <template #suffix> / {{ dirInfo?.fileNum }} </template>
-      </n-statistic>
-      <!-- <div v-if="dirInfo?.fileNum === downloadFinishNum">下载完成</div> -->
+
+      <n-space :size="32" class="mb-4">
+        <n-statistic label="本次下载" :value="downCount" />
+        <n-statistic label="下载进度" :value="downFileIndex">
+          <template #suffix> / <n-number-animation :from="0" :to="dirInfo?.fileNum" /> </template>
+        </n-statistic>
+        <n-statistic v-if="dirInfo" label="队列位置" :value="downloadIndex">
+          <template #suffix> / <n-number-animation :from="0" :to="maxList" /> </template>
+        </n-statistic>
+      </n-space>
+      <n-space :size="32" class="mb-4">
+        <template v-if="downloadPath && !downloadIng">
+          <n-input-group>
+            <n-input-group-label>从队列位置</n-input-group-label>
+            <n-input-number
+              v-model:value="setIndex"
+              :min="0"
+              :max="maxList - 1"
+              :style="{ width: '33%' }"
+            />
+            <n-button @click="downloadImg()">下载</n-button>
+          </n-input-group>
+        </template>
+      </n-space>
     </div>
   </div>
 </template>
