@@ -5,6 +5,7 @@
   window.$dialog = useDialog()
   window.$notification = useNotification()
   window.$loadingBar = useLoadingBar()
+
 </script>
 
 <template>

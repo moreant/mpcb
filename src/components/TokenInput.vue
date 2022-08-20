@@ -21,7 +21,9 @@
     }
     appStore.token = token
     appStore.ossInstance = new OOS(res.value)
+    appStore.sig = res.value
     emit('update:token', token)
+    await window.ipcRenderer.invoke('OSS_INIT', JSON.stringify(res.value))
   }
 
   const onCopyCode = () => {

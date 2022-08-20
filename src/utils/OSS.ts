@@ -1,7 +1,6 @@
 import OSS from 'ali-oss'
 import dayjs from 'dayjs'
 import { Sig } from '@/types/index'
-import fs from 'fs';
 
 class OOS {
   client: OSS | undefined
@@ -20,10 +19,10 @@ class OOS {
     }
   }
 
-  downImg = async (url: string, saveUrl: string) => {
-    const result = await this.client?.getStream(url)
-    const ws = fs.createWriteStream(saveUrl)
-    result?.stream.pipe(ws)
+  downImg = async (url: string) => {
+    console.log(this.client?.getStream, this.client?.get)
+    const res = await this.client?.getStream(url)
+    return res
   }
 
   getBuffer = (url: string) => this.client?.get(url)

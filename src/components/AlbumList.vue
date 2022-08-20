@@ -1,9 +1,7 @@
 <script setup lang="ts">
   import { getAlbumList, getDirList } from '@/api'
-  import { downImgToDist } from '@/api/fs'
   import { useAppStore } from '@/store/token'
   import { Dir } from '@/types'
-  import OOS from '@/utils/OSS.js'
   import { MenuOption, NImage } from 'naive-ui'
   import { Ref } from 'vue'
 
@@ -11,6 +9,7 @@
 
   const activeKey = ref('')
   const downloadPath = ref('')
+  const listSize = 20
   const menuOptions: Ref<MenuOption[]> = ref([])
   const dirList = ref<Dir[]>()
 
@@ -94,21 +93,37 @@
     setDisablie(true)
 
     // 分组下载避免爆内存
-    const chunkSize = 100
+    const chunkSize = listSize
     const chunkList = []
     for (let i = 0; i < fileList.length; i += chunkSize) {
       chunkList.push(fileList.slice(i, i + chunkSize))
     }
 
     for (let i = 0; i < chunkList.length; i++) {
-      await Promise.all(
-        chunkList[i].map((item) =>
-          downImgToDist(dirDownPath.value, item.url, item.fileName).then(
-            () => (downloadFinishNum.value += 1)
+      try {
+        await Promise.all(
+          chunkList[i].map((item) =>
+            window.ipcRenderer
+              .invoke('GET_STRAME', item.url, dirDownPath.value, item.fileName)
+              .then(() => (downloadFinishNum.value += 1))
           )
         )
-      )
+      } catch (e) {
+        let message = ''
+        if (typeof e === 'string') {
+          message = e.toUpperCase()
+        } else if (e instanceof Error) {
+          message = e.message
+        }
+        console.error(e)
+
+        window.$notification.error({
+          title: `下载出现错误`,
+          content: message
+        })
+      }
     }
+
     setDisablie(false)
     downloadIng.value = false
   }
