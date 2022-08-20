@@ -45,10 +45,4 @@ export const getAlbumList = (dirId: number, fileNum = 10000) => {
   return request.post<void, Basic<AlbumList>>(api.albumList, qs.stringify(params))
 }
 
-// export const downImg = async (dir: string, url: string, fileName: string) => {
-//   await window.fs.promises.mkdir(dir, { recursive: true })
-//   const res = await oos.getBuffer(url)
-//   await window.fs.promises.writeFile(`${dir}/${fileName}`, res.content)
-// }
-
 export const getIcon = (url: string) => oos.getUrl(url)
