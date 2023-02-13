@@ -86,7 +86,7 @@
   const downloadImg = async () => {
     downCount.value = 0
     downloadIndex.value = 0
-    const res = await getAlbumList(parseInt(activeKey.value), 10000)
+    const res = await getAlbumList(parseInt(activeKey.value), 20000)
     if (!res.value) {
       return
     }

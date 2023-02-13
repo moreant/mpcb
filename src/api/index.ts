@@ -34,7 +34,7 @@ export const getDirList = () => {
   return request.post<void, Basic<DirList>>(api.dirList, qs.stringify(params))
 }
 
-export const getAlbumList = (dirId: number, fileNum = 10000) => {
+export const getAlbumList = (dirId: number, fileNum: number) => {
   const params = {
     order: 1,
     offset: 0,
