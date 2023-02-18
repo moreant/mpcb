@@ -4,15 +4,15 @@ on:
   push:
     branches: [main]
     paths-ignore:
-      - "**.md"
-      - "**.spec.js"
-      - ".idea"
-      - ".vscode"
-      - ".dockerignore"
-      - "Dockerfile"
-      - ".gitignore"
-      - ".github/**"
-      - "!.github/workflows/build.yml"
+      - '**.md'
+      - '**.spec.js'
+      - '.idea'
+      - '.vscode'
+      - '.dockerignore'
+      - 'Dockerfile'
+      - '.gitignore'
+      - '.github/**'
+      - '!.github/workflows/build.yml'
 
 jobs:
   build:
@@ -46,5 +46,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: release_on_${{ matrix. os }}
-          path: release/
+          path: |
+            release/**.exe
+            release/**.dmg
           retention-days: 5
