@@ -52,4 +52,5 @@ jobs:
           path: |
             release/**/*.exe
             release/**/*.dmg
+            !release/**/win-unpacked/*.exe
           retention-days: 5
