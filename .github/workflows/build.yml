@@ -35,7 +35,7 @@ jobs:
         run: npm i -g pnpm && pnpm i
 
       - name: Build Release Files
-        run: npm run build
+        run: pnpm run build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

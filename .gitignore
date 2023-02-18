@@ -23,5 +23,3 @@ dist-ssr
 
 release
 .vscode/.debug.env
-
-components.d.ts
