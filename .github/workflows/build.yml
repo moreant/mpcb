@@ -35,13 +35,10 @@ jobs:
           node-version: 18
 
       - name: Install Dependencies
-        run: corepack enable
-
-      - name: Install Dependencies
-        run: pnpm install
+        run: npm ci
 
       - name: Build Release Files
-        run: pnpm run build
+        run: npm run build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
