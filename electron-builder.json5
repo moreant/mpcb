@@ -4,6 +4,7 @@
 {
   "appId": "com.molingran.mpcb",
   "asar": true,
+  "icon": "public/Logo.ico",
   "directories": {
     "output": "release/${version}"
   },
@@ -15,8 +16,7 @@
     "artifactName": "${productName}_${version}.${ext}",
     "target": [
       "dmg"
-    ],
-    "icon": "public/icon.icns"
+    ]
   },
   "win": {
     "target": [
@@ -28,7 +28,6 @@
       }
     ],
     "artifactName": "${productName}_${version}.${ext}"
-    "icon": "public/icon.ico"
   },
   "nsis": {
     "oneClick": false,
