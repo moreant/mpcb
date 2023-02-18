@@ -6,14 +6,14 @@ MPCB(meizu photo cloud backup)
 ![](.github/preview.jpg)
 
 详细使用文档：  
-https://pyumch0w0j.feishu.cn/docx/doxcn3KgDeFOKy5anFiOYmtqexc
+[Mpcb 0.3.0 使用方式](https://pyumch0w0j.feishu.cn/docx/doxcn3KgDeFOKy5anFiOYmtqexc)
 
 国内镜像地址:  
 蓝奏云：  
 https://moreant.lanzoul.com/b01cpng1e  密码:fedu  
 
 ## 特别鸣谢
-感谢 @caoxiemeihao 及他的 electron-vite-vue 模板，开箱即用。
+感谢 [@caoxiemeihao](https://github.com/caoxiemeihao) 及他的 [electron-vite-vue](https://github.com/electron-vite/electron-vite-vue) 模板，开箱即用。
 
 ## 更新日志
 ### 0.3.0 
@@ -21,15 +21,18 @@ https://moreant.lanzoul.com/b01cpng1e  密码:fedu
 2. 更新相关依赖。
 
 ### 0.2.1
+1. 能从指定位置开始下载图片，缓解 Token 过期导致下载失败。
+
+### 0.2.0
 1. 使用 Electron 简化程序安装。
-2. 使用 NaiveUI 重构 UI。
-3. 能从指定位置开始下载图片，缓解 Token 过期导致下载失败。
-4. 简化获取 Token 的方式。
+2. 使用非常有趣的 [NaiveUI](https://www.naiveui.com/zh-CN/os-theme) 重构 UI。
+3. 简化获取 Token 的方式。
 
 ### 0.1.0
-1. 使用 daisyui 与 nodejs 实现基本功能
+1. 使用 [daisyUI](https://daisyui.com/) 与 [nodejs](https://nodejs.org/zh-cn/) 实现基本功能
 2. 使用浏览器脚本插件获取 Token
 
 
-## 工具
-支持生成 521 尺寸 icon 的网站 https://redketchup.io/icon-converter
+## 备份工具
+electorn 打包时需要 512 尺寸的 ico 文件，下面是支持在线生成 512 尺寸的网站：  
+https://redketchup.io/icon-converter
