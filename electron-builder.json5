@@ -4,7 +4,7 @@
 {
   "appId": "com.molingran.mpcb",
   "asar": true,
-  "icon": "public/Logo.jpg",
+  "icon": "public/favicon.ico",
   "directories": {
     "output": "release/${version}"
   },
