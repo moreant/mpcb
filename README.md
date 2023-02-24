@@ -16,6 +16,11 @@ https://moreant.lanzoul.com/b01cpng1e  密码:fedu
 感谢 [@caoxiemeihao](https://github.com/caoxiemeihao) 及他的 [electron-vite-vue](https://github.com/electron-vite/electron-vite-vue) 模板，开箱即用。
 
 ## 更新日志
+
+### 0.3.1
+1. 修复了在macOS上获取下载路径错误的问题；增加了在文件管理器中打开下载路径的功能 [#2](https://github.com/moreant/mpcb/issues/2) by [@Jason Lam](https://github.com/JasonLamv-t)
+
+
 ### 0.3.0 
 1. 图片最多获取 10,000 张改为 20,000 张。
 2. 更新相关依赖。

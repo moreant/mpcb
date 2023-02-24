@@ -1,6 +1,6 @@
 {
   "name": "mpcb",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "main": "dist-electron/main/index.js",
   "description": "mpcb",
   "author": "moreant <moreant@foxmail.com>",
