@@ -1,160 +1,158 @@
 <script setup lang="ts">
-  import { getAlbumList, getDirList } from '@/api';
-  import { useAppStore } from '@/store/token';
-  import { Dir } from '@/types';
-  import { ipcRenderer } from 'electron';
-  import { MenuOption, NImage } from 'naive-ui';
-import path from 'path';
-  import { Ref } from 'vue';
+import { getAlbumList, getDirList } from '@/api'
+import { useAppStore } from '@/store/token'
+import { Dir } from '@/types'
+import { ipcRenderer } from 'electron'
+import { MenuOption, NImage } from 'naive-ui'
+import path from 'path'
+import { Ref } from 'vue'
+import { openDownloadFloder } from '@/api/fs'
 
+const appStore = useAppStore()
 
-  const appStore = useAppStore()
+const activeKey = ref('')
+const downloadPath = ref('')
+const listSize = 5
+const menuOptions: Ref<MenuOption[]> = ref([])
+const dirList = ref<Dir[]>()
 
-  const activeKey = ref('')
-  const downloadPath = ref('')
-  const listSize = 5
-  const menuOptions: Ref<MenuOption[]> = ref([])
-  const dirList = ref<Dir[]>()
+const srcList: Array<{ url: string; src: string }> = []
 
-  const srcList: Array<{ url: string; src: string }> = []
-
-  const getIcon = (url: string) => {
-    const cacheSrc = srcList.find((item) => item.url === url)
-    if (cacheSrc) {
-      return cacheSrc.src
-    }
-    const src = appStore.ossInstance?.getUrl(url)
-    if (src) {
-      srcList.push({ url, src })
-    }
-    return src
+const getIcon = (url: string) => {
+  const cacheSrc = srcList.find((item) => item.url === url)
+  if (cacheSrc) {
+    return cacheSrc.src
   }
-
-  const init = async () => {
-    const res = await getDirList()
-    if (!res.value) {
-      return
-    }
-    dirList.value = res.value.dir
-    menuOptions.value = res.value?.dir.map((item) => {
-      return {
-        label: `${item.dirName}(${item.fileNum})`,
-        key: item.id + '',
-        icon: () => h(NImage, { src: getIcon(item.icon), previewDisabled: true }, {})
-      }
-    })
+  const src = appStore.ossInstance?.getUrl(url)
+  if (src) {
+    srcList.push({ url, src })
   }
+  return src
+}
 
-  const setDisablie = (disabled: boolean) => {
-    menuOptions.value = menuOptions.value.map((item) => {
-      item.disabled = disabled
-      return item
-    })
+const init = async () => {
+  const res = await getDirList()
+  if (!res.value) {
+    return
   }
-
-  // 计算过期时间
-  const showExpiredTime = computed(() => {
-    if (!appStore.ossInstance) {
-      return ''
+  dirList.value = res.value.dir
+  menuOptions.value = res.value?.dir.map((item) => {
+    return {
+      label: `${item.dirName}(${item.fileNum})`,
+      key: item.id + '',
+      icon: () => h(NImage, { src: getIcon(item.icon), previewDisabled: true }, {})
     }
-    const day = appStore.ossInstance.getExpiredTimeDayjs()
-    return day?.format('YYYY-MM-DD HH:mm:ss')
   })
+}
 
-  const dirInfo = computed(() =>
-    dirList.value?.find((item) => item.id === parseInt(activeKey.value))
-  )
+const setDisablie = (disabled: boolean) => {
+  menuOptions.value = menuOptions.value.map((item) => {
+    item.disabled = disabled
+    return item
+  })
+}
 
-  // 弹窗获取下载目录
-  const getDownloadPath = async () => {
-    let downloadDir = await ipcRenderer.invoke('GET_DOWNLOADS_PATH')
-    const resultPath = await ipcRenderer.invoke('OPEN_FILE_DIALOG', downloadDir)
-    downloadPath.value = resultPath[0]
+// 计算过期时间
+const showExpiredTime = computed(() => {
+  if (!appStore.ossInstance) {
+    return ''
+  }
+  const day = appStore.ossInstance.getExpiredTimeDayjs()
+  return day?.format('YYYY-MM-DD HH:mm:ss')
+})
+
+const dirInfo = computed(() => dirList.value?.find((item) => item.id === parseInt(activeKey.value)))
+
+// 弹窗获取下载目录
+const getDownloadPath = async () => {
+  let downloadDir = await ipcRenderer.invoke('GET_DOWNLOADS_PATH')
+  const resultPath = await ipcRenderer.invoke('OPEN_FILE_DIALOG', downloadDir)
+  downloadPath.value = resultPath[0]
+}
+
+// 计算下载地址
+const dirDownPath = computed(() => {
+  const rootPath = downloadPath.value
+  if (!rootPath || !dirInfo.value?.dirName) return ''
+
+  return path.resolve(rootPath, dirInfo.value?.dirName)
+})
+
+const downloadIng = ref(false)
+const downCount = ref(0)
+
+const downloadIndex = ref(0)
+const downloadImg = async () => {
+  downCount.value = 0
+  downloadIndex.value = 0
+  const res = await getAlbumList(parseInt(activeKey.value), 20000)
+  if (!res.value) {
+    return
+  }
+  const fileList = res.value.file
+  downloadIng.value = true
+  setDisablie(true)
+
+  // 分组下载避免爆内存
+  const chunkSize = listSize
+  const chunkList = []
+  for (let i = 0; i < fileList.length; i += chunkSize) {
+    chunkList.push(fileList.slice(i, i + chunkSize))
   }
 
-  // 计算下载地址
-  const dirDownPath = computed(() => {
-    const rootPath = downloadPath.value
-    if (!rootPath || !dirInfo.value?.dirName) return ''
-
-    return path.resolve(rootPath, dirInfo.value?.dirName)
-  })
-
-  const downloadIng = ref(false)
-  const downCount = ref(0)
-
-  const downloadIndex = ref(0)
-  const downloadImg = async () => {
-    downCount.value = 0
-    downloadIndex.value = 0
-    const res = await getAlbumList(parseInt(activeKey.value), 20000)
-    if (!res.value) {
-      return
-    }
-    const fileList = res.value.file
-    downloadIng.value = true
-    setDisablie(true)
-
-    // 分组下载避免爆内存
-    const chunkSize = listSize
-    const chunkList = []
-    for (let i = 0; i < fileList.length; i += chunkSize) {
-      chunkList.push(fileList.slice(i, i + chunkSize))
+  for (let i = 0; i < chunkList.length; i++) {
+    if (i < setIndex.value) {
+      downloadIndex.value += 1
+      continue
     }
 
-    for (let i = 0; i < chunkList.length; i++) {
-      if (i < setIndex.value) {
-        downloadIndex.value += 1
-        continue
-      }
-
-      try {
-        downloadIndex.value += 1
-        await Promise.all(
-          chunkList[i].map((item) =>
-            ipcRenderer
-              .invoke('GET_STRAME', item.url, dirDownPath.value, item.fileName)
-              .then(() => (downCount.value += 1))
-          )
+    try {
+      downloadIndex.value += 1
+      await Promise.all(
+        chunkList[i].map((item) =>
+          ipcRenderer
+            .invoke('GET_STRAME', item.url, dirDownPath.value, item.fileName)
+            .then(() => (downCount.value += 1))
         )
-      } catch (e) {
-        let message = ''
-        if (typeof e === 'string') {
-          message = e.toUpperCase()
-        } else if (e instanceof Error) {
-          message = e.message
-        }
-        console.error(e, chunkList[i])
-
-        window.$notification.error({
-          title: `下载出现错误 队列位置 ${i + 1}`,
-          content: message
-        })
-        throw e
+      )
+    } catch (e) {
+      let message = ''
+      if (typeof e === 'string') {
+        message = e.toUpperCase()
+      } else if (e instanceof Error) {
+        message = e.message
       }
+      console.error(e, chunkList[i])
+
+      window.$notification.error({
+        title: `下载出现错误 队列位置 ${i + 1}`,
+        content: message
+      })
+      throw e
     }
-
-    setDisablie(false)
-    downloadIng.value = false
   }
 
-  init()
+  setDisablie(false)
+  downloadIng.value = false
+}
 
-  const setIndex = ref(0)
+init()
 
-  const maxList = computed(() =>
-    dirInfo.value ? Math.floor(dirInfo.value.fileNum / listSize) + 1 : 0
-  )
+const setIndex = ref(0)
 
-  const downFileIndex = computed(() =>
-    dirInfo.value ? Math.min(setIndex.value * listSize + downCount.value, dirInfo.value.fileNum) : 0
-  )
+const maxList = computed(() =>
+  dirInfo.value ? Math.floor(dirInfo.value.fileNum / listSize) + 1 : 0
+)
 
-  const onMenuChange = () => {
-    downCount.value = 0
-    downloadIndex.value = 0
-    setIndex.value = 0
-  }
+const downFileIndex = computed(() =>
+  dirInfo.value ? Math.min(setIndex.value * listSize + downCount.value, dirInfo.value.fileNum) : 0
+)
+
+const onMenuChange = () => {
+  downCount.value = 0
+  downloadIndex.value = 0
+  setIndex.value = 0
+}
 </script>
 
 <template>
@@ -178,11 +176,18 @@ import path from 'path';
       </n-space>
       <div class="mb-4">
         <n-statistic label="下载路径" :value="dirDownPath" />
-        <n-space>
-          <n-button v-if="activeKey && !downloadIng" @click="getDownloadPath"
-            >选择下载路径</n-button
-          >
-        </n-space>
+        <div class="inline-flex gap-2">
+          <n-space>
+            <n-button v-if="activeKey && !downloadIng" @click="getDownloadPath"
+              >选择下载路径</n-button
+            >
+          </n-space>
+          <n-space>
+            <n-button v-if="dirDownPath" @click="openDownloadFloder(dirDownPath)"
+              >打开下载路径</n-button
+            >
+          </n-space>
+        </div>
       </div>
 
       <n-space :size="32" class="mb-4">
