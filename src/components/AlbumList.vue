@@ -1,10 +1,12 @@
 <script setup lang="ts">
-  import { getAlbumList, getDirList } from '@/api'
-  import { useAppStore } from '@/store/token'
-  import { Dir } from '@/types'
-  import { MenuOption, NImage } from 'naive-ui'
-  import { Ref } from 'vue'
-  import { ipcRenderer } from 'electron'
+  import { getAlbumList, getDirList } from '@/api';
+  import { useAppStore } from '@/store/token';
+  import { Dir } from '@/types';
+  import { ipcRenderer } from 'electron';
+  import { MenuOption, NImage } from 'naive-ui';
+import path from 'path';
+  import { Ref } from 'vue';
+
 
   const appStore = useAppStore()
 
@@ -66,18 +68,16 @@
   // 弹窗获取下载目录
   const getDownloadPath = async () => {
     let downloadDir = await ipcRenderer.invoke('GET_DOWNLOADS_PATH')
-    const path = await ipcRenderer.invoke('OPEN_FILE_DIALOG', downloadDir)
-    downloadPath.value = path[0]
+    const resultPath = await ipcRenderer.invoke('OPEN_FILE_DIALOG', downloadDir)
+    downloadPath.value = resultPath[0]
   }
 
   // 计算下载地址
   const dirDownPath = computed(() => {
-    const path = downloadPath.value
-    if (!path) {
-      return ''
-    }
-    const split = path.indexOf(':') ? '\\' : `/`
-    return path + split + dirInfo.value?.dirName
+    const rootPath = downloadPath.value
+    if (!rootPath || !dirInfo.value?.dirName) return ''
+
+    return path.resolve(rootPath, dirInfo.value?.dirName)
   })
 
   const downloadIng = ref(false)
