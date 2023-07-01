@@ -41,8 +41,8 @@ devDependencies:
     specifier: ^10.4.14
     version: 10.4.14(postcss@8.4.23)
   electron:
-    specifier: ^24.3.0
-    version: 24.3.0
+    specifier: ^25.2.0
+    version: 25.2.0
   electron-builder:
     specifier: ^23.6.0
     version: 23.6.0
@@ -1589,8 +1589,8 @@ packages:
     resolution: {integrity: sha512-Uk7C+7aPBryUR1Fwvk9VmipBcN9fVsqBO57jV2ZjTm+IZ6BMNqu7EDVEg2HxCNufk6QcWlFsBkhQyQroB2VWKw==}
     dev: true
 
-  /electron@24.3.0:
-    resolution: {integrity: sha512-M7PpfpOzGdLeZPr2xhxXuvJeoXPEHMH40Rtv8BCGleRPolwna9BepAGc0H0F+Uz5kGKOv3xcm99fTurvXUH0nw==}
+  /electron@25.2.0:
+    resolution: {integrity: sha512-I/rhcW2sV2fyiveVSBr2N7v5ZiCtdGY0UiNCDZgk2fpSC+irQjbeh7JT2b4vWmJ2ogOXBjqesrN9XszTIG6DHg==}
     engines: {node: '>= 12.20.55'}
     hasBin: true
     requiresBuild: true
