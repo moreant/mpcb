@@ -24,8 +24,8 @@ dependencies:
     specifier: ^2.0.36
     version: 2.0.36(typescript@5.0.4)(vue@3.3.2)
   qs:
-    specifier: ^6.11.1
-    version: 6.11.1
+    specifier: ^6.11.2
+    version: 6.11.2
 
 devDependencies:
   '@types/ali-oss':
@@ -3285,8 +3285,8 @@ packages:
     requiresBuild: true
     dev: true
 
-  /qs@6.11.1:
-    resolution: {integrity: sha512-0wsrzgTz/kAVIeuxSjnpGC56rzYtr6JT/2BwEvMaPhFIoYa1aGO8LbzuU1R0uUYQkLpWBTOj0l/CLAJB64J6nQ==}
+  /qs@6.11.2:
+    resolution: {integrity: sha512-tDNIz22aBzCDxLtVH++VnTfzxlfeK5CbqohpSqpJgj1Wg/cQbStNAz3NuqCs5vV+pjBsK4x4pN9HlVh7rcYRiA==}
     engines: {node: '>=0.6'}
     dependencies:
       side-channel: 1.0.4
@@ -4035,7 +4035,7 @@ packages:
       ip: 1.1.8
       proxy-agent: 5.0.0
       pump: 3.0.0
-      qs: 6.11.1
+      qs: 6.11.2
       statuses: 1.5.0
       utility: 1.17.0
     transitivePeerDependencies:
