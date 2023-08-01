@@ -35,7 +35,7 @@
     "typescript": "^5.0.4",
     "unplugin-auto-import": "^0.16.4",
     "unplugin-vue-components": "^0.25.1",
-    "vite": "^4.3.5",
+    "vite": "^4.4.7",
     "vite-plugin-electron": "^0.11.2",
     "vite-plugin-electron-renderer": "^0.14.2",
     "vue": "^3.3.2",
