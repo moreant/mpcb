@@ -42,7 +42,7 @@
     "vue-tsc": "^1.8.3"
   },
   "dependencies": {
-    "@vueuse/core": "^10.1.2",
+    "@vueuse/core": "^10.3.0",
     "ali-oss": "^6.17.1",
     "axios": "^1.4.0",
     "dayjs": "^1.11.7",
