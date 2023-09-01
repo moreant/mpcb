@@ -26,7 +26,7 @@
   "devDependencies": {
     "@types/ali-oss": "^6.16.8",
     "@types/qs": "^6.9.7",
-    "@vitejs/plugin-vue": "^4.3.3",
+    "@vitejs/plugin-vue": "^4.3.4",
     "autoprefixer": "^10.4.15",
     "electron": "^26.1.0",
     "electron-builder": "^24.6.3",
